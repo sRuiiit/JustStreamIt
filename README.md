@@ -29,3 +29,21 @@ Cette application affiche les films les mieux notés à partir d’une API local
    ```bash
    git clone https://github.com/sRuiiit/JustStreamIt.git
    cd JustStreamIt
+
+2.	S’assurer que l’API fonctionne localement à l’adresse :
+
+   ```http://localhost:8000/api/v1/titles/
+
+3.	Ouvrir index.html dans un navigateur.
+   	3.	Ouvrir index.html dans un navigateur.
+
+## 📦 Déploiement GitHub Pages
+
+Le projet peut être visualisé ici :
+➡️ https://sRuiiit.github.io/JustStreamIt/
+
+⸻
+
+## 🧑‍💻 Auteur
+
+Projet réalisé par Steve Raffner dans le cadre du parcours Développeur d’applications Python chez OpenClassrooms.
