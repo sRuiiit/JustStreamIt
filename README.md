@@ -29,47 +29,58 @@ L’application utilise une API REST locale fournie dans le projet `OCMovies-API
 
 ### Étapes pour l’installer :
 
-1. **Cloner le dépôt backend (OCMovies-API)** :
+1. Clonez ce dépôt de code :
    ```bash
    git clone https://github.com/OpenClassrooms-Student-Center/OCMovies-API-EN-FR.git
+   ```
+   Ou téléchargez-le en [ZIP](https://github.com/OpenClassrooms-Student-Center/OCMovies-API-EN-FR/archive/refs/heads/master.zip)
+
+2. Rendez-vous dans le dossier :
+   ```bash
    cd OCMovies-API-EN-FR
    ```
 
-2. **Créer un environnement Python** :
+3. Créez un environnement virtuel :
 
-   - **Sur Mac/Linux** :
+   - **Windows** :
+     ```bash
+     python -m venv env
+     ```
+   - **macOS/Linux** :
      ```bash
      python3 -m venv env
+     ```
+
+4. Activez l’environnement virtuel :
+
+   - **Windows** :
+     ```bash
+     env\Scripts\activate
+     ```
+   - **macOS/Linux** :
+     ```bash
      source env/bin/activate
      ```
 
-   - **Sur Windows** :
-     ```bash
-     python -m venv env
-     env\Scripts\activate
-     ```
-
-3. **Installer les dépendances** :
+5. Installez les dépendances :
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Lancer le serveur local** :
-
-   - **Sur Mac/Linux** :
-     ```bash
-     python3 -m uvicorn main:app --reload
-     ```
-
-   - **Sur Windows** :
-     ```bash
-     python -m uvicorn main:app --reload
-     ```
-
-5. L’API sera disponible à l’adresse :
+6. Créez et alimentez la base de données :
+   ```bash
+   python manage.py create_db
    ```
-   http://localhost:8000/api/v1/titles/
+
+7. Lancez le serveur :
+   ```bash
+   python manage.py runserver
    ```
+
+L’API sera disponible à l’adresse suivante :
+```
+http://localhost:8000/api/v1/titles/
+```
 
 ⚠️ Assure-toi de lancer ce serveur avant d'ouvrir `index.html`, sinon les films ne pourront pas s'afficher.
 
@@ -85,12 +96,12 @@ L’application utilise une API REST locale fournie dans le projet `OCMovies-API
 
 2. Ouvrir `index.html` dans un navigateur moderne :
 
-   - **Sur Mac** : double-clique sur le fichier dans le Finder ou fais :
+   - **Sur Mac** :
      ```bash
      open index.html
      ```
 
-   - **Sur Windows** : double-clique sur le fichier dans l'explorateur ou fais :
+   - **Sur Windows** :
      ```bash
      start index.html
      ```
