@@ -37,13 +37,13 @@ Cette application affiche les films les mieux notés à partir d’une API local
 3.	Ouvrir index.html dans un navigateur.
    	3.	Ouvrir index.html dans un navigateur.
 
-## 📦 Déploiement GitHub Pages
-
+**## 📦 Déploiement GitHub Pages
+**
 Le projet peut être visualisé ici :
 ➡️ https://sRuiiit.github.io/JustStreamIt/
 
 ⸻
 
-## 🧑‍💻 Auteur
-
+**## 🧑‍💻 Auteur
+**
 Projet réalisé par Steve Raffner dans le cadre du parcours Développeur d’applications Python chez OpenClassrooms.
