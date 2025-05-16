@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCMovies</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .active-category {
+      @apply bg-black text-white;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+  <!-- En-tête -->
+  <header class="bg-gray-300 p-4 text-center text-xl font-semibold">
+    Vidéos à la demande
+  </header>
+
+  <!-- Conteneur principal -->
+  <main class="max-w-5xl mx-auto p-4 space-y-10">
+
+    <!-- Meilleur film -->
+    <section id="best-movie" class="bg-white rounded-lg shadow p-4">
+      <h2 class="text-lg font-bold mb-4">Meilleur film</h2>
+      <div class="flex flex-col md:flex-row gap-6 border-2 border-black p-4 transition-all duration-300">
+        <img id="best-movie-img" src="" alt="Meilleur film" class="w-full max-w-xs md:max-w-sm rounded shadow object-cover mx-auto md:mx-0" onerror="this.src='https://placehold.co/300x450?text=Meilleur+film'; this.classList.add('border', 'border-gray-400');">
+        <div class="flex-1 flex flex-col justify-between">
+          <div>
+            <h3 id="best-movie-title" class="text-2xl font-bold mb-2">Titre</h3>
+            <p id="best-movie-desc" class="text-base mb-4">Résumé</p>
+          </div>
+          <div class="text-right">
+            <button id="best-movie-details" class="bg-red-500 text-white px-4 py-2 rounded transition hover:bg-red-600">Détails</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section de films -->
+    <section id="top-rated" class="space-y-6">
+      <h2 class="text-lg font-bold">Films les mieux notés</h2>
+      <div id="top-rated-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"></div>
+      <button id="top-rated-more" class="text-blue-500 hover:underline">Voir plus</button>
+    </section>
+
+    <!-- Catégorie 1 -->
+    <section class="space-y-6">
+      <h2 class="text-lg font-bold">Mystery</h2>
+      <div id="cat1-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"></div>
+      <button id="cat1-more" class="text-blue-500 hover:underline">Voir plus</button>
+    </section>
+
+    <!-- Catégorie 2 -->
+    <section class="space-y-6">
+      <h2 class="text-lg font-bold">Comedy</h2>
+      <div id="cat2-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"></div>
+      <button id="cat2-more" class="text-blue-500 hover:underline">Voir plus</button>
+    </section>
+
+    <!-- Autres catégories -->
+    <section class="space-y-4">
+      <h2 class="text-lg font-bold">Autres :</h2>
+      <div id="category-buttons" class="flex flex-wrap gap-2"></div>
+      <div id="other-category-title" class="font-semibold mt-2">Catégorie choisie dans la liste</div>
+      <div id="cat3-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"></div>
+      <button id="cat3-more" class="text-blue-500 hover:underline">Voir plus</button>
+    </section>
+  </main>
+
+  <!-- Fenêtre modale -->
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
+    <div class="bg-white p-6 rounded-lg max-w-lg w-full relative overflow-y-auto max-h-[90vh]">
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-red-500 font-bold text-xl">&times;</button>
+      <h3 id="modal-title" class="text-2xl font-bold mb-2"></h3>
+      <div class="text-sm text-gray-600 mb-2" id="modal-meta"></div>
+      <img id="modal-img" src="" alt="Poster" class="w-40 float-right ml-4 mb-2 rounded border border-gray-400" onerror="this.src='https://placehold.co/150x220?text=Aucun+visuel';">
+      <p id="modal-description" class="text-sm"></p>
+      <div id="modal-details" class="text-sm mt-4 space-y-1"></div>
+    </div>
+  </div>
+
+  <!-- Script JS : inchangé -->
+<script>
+    const apiBase = 'http://localhost:8000/api/v1/titles';
+    let bestMovieData = null;
+
+    function openModal(data) {
+      document.getElementById('modal-title').textContent = data.title;
+      document.getElementById('modal-meta').textContent = `${data.year} - ${data.countries.join(', ')} - ${data.duration}min`;
+      const modalImg = document.getElementById('modal-img');
+      modalImg.src = data.image_url || `https://placehold.co/150x220?text=${encodeURIComponent(data.title)}`;
+      modalImg.onerror = () => {
+        modalImg.src = `https://placehold.co/150x220?text=${encodeURIComponent(data.title)}`;
+        modalImg.classList.add('border', 'border-gray-400');
+      };
+      document.getElementById('modal-description').textContent = data.long_description || data.description;
+      document.getElementById('modal-details').innerHTML = `
+        <p><strong>Genres :</strong> ${data.genres.join(', ')}</p>
+        <p><strong>Note IMDb :</strong> ${data.imdb_score}</p>
+        <p><strong>Réalisateur :</strong> ${data.directors.join(', ')}</p>
+        <p><strong>Acteurs :</strong> ${data.actors.join(', ')}</p>
+        <p><strong>Classification :</strong> ${data.rated}</p>
+        <p><strong>Recettes :</strong> ${data.worldwide_gross_income || 'Inconnues'} ${data.budget_currency || ''}</p>
+      `;
+      document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.add('hidden');
+    }
+
+    function createMovieCard(movie, targetId) {
+      const container = document.getElementById(targetId);
+      const card = document.createElement('div');
+      card.className = 'cursor-pointer transition duration-200 hover:scale-105';
+      const img = document.createElement('img');
+      img.src = movie.image_url || `https://placehold.co/150x220?text=${encodeURIComponent(movie.title)}`;
+      img.alt = movie.title;
+      img.className = 'w-full h-auto rounded shadow';
+      img.onerror = () => {
+        img.src = `https://placehold.co/150x220?text=${encodeURIComponent(movie.title)}`;
+        img.classList.add('border', 'border-gray-400');
+      };
+      img.onclick = () => fetch(movie.url).then(r => r.json()).then(openModal);
+      card.appendChild(img);
+      container.appendChild(card);
+    }
+
+    function loadMovies(endpoint, targetId, page = 1) {
+      fetch(`${endpoint}&page_size=6&page=${page}`)
+        .then(res => res.json())
+        .then(data => {
+          data.results.forEach(movie => createMovieCard(movie, targetId));
+        });
+    }
+
+    function setupSection(endpoint, buttonId, targetId) {
+      let page = 1;
+      loadMovies(endpoint, targetId, page);
+      loadMovies(endpoint, targetId, ++page);
+      document.getElementById(buttonId).addEventListener('click', () => {
+        page++;
+        loadMovies(endpoint, targetId, page);
+      });
+    }
+
+    // Meilleur film
+    fetch(`${apiBase}/?sort_by=-imdb_score`)
+      .then(res => res.json())
+      .then(data => fetch(data.results[0].url))
+      .then(res => res.json())
+      .then(best => {
+        bestMovieData = best;
+        document.getElementById('best-movie-img').src = best.image_url;
+        document.getElementById('best-movie-title').textContent = best.title;
+        document.getElementById('best-movie-desc').textContent = best.description;
+        document.getElementById('best-movie-details').addEventListener('click', () => openModal(best));
+      });
+
+    setupSection(`${apiBase}/?sort_by=-imdb_score`, 'top-rated-more', 'top-rated-list');
+    setupSection(`${apiBase}/?genre=Mystery&sort_by=-imdb_score`, 'cat1-more', 'cat1-list');
+    setupSection(`${apiBase}/?genre=Comedy&sort_by=-imdb_score`, 'cat2-more', 'cat2-list');
+
+    // Catégories dynamiques avec boutons
+    fetch('http://localhost:8000/api/v1/genres/')
+      .then(res => res.json())
+      .then(data => {
+        const genres = data.results;
+        const buttonContainer = document.getElementById('category-buttons');
+        let currentGenre = genres[0].name;
+        let page = 1;
+        let activeBtn = null;
+
+        function loadSelectedCategory(reset = false) {
+          if (reset) document.getElementById('cat3-list').innerHTML = '';
+          document.getElementById('other-category-title').textContent = `Voir au-dessus (catégorie choisie = ${currentGenre})`;
+          loadMovies(`${apiBase}/?genre=${currentGenre}&sort_by=-imdb_score`, 'cat3-list', page);
+          loadMovies(`${apiBase}/?genre=${currentGenre}&sort_by=-imdb_score`, 'cat3-list', ++page);
+        }
+
+        genres.forEach(genre => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = genre.name;
+          btn.className = 'border p-2 rounded transition hover:bg-gray-200';
+          btn.addEventListener('click', e => {
+            e.preventDefault();
+            currentGenre = genre.name;
+            page = 1;
+            if (activeBtn) activeBtn.classList.remove('bg-black', 'text-white');
+            btn.classList.add('bg-black', 'text-white');
+            activeBtn = btn;
+            loadSelectedCategory(true);
+          });
+          buttonContainer.appendChild(btn);
+        });
+
+        loadSelectedCategory(true);
+
+        document.getElementById('cat3-more').addEventListener('click', () => {
+          page++;
+          loadSelectedCategory();
+        });
+      });
+  </script>
+</body>
+</html>
