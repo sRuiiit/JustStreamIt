@@ -35,11 +35,19 @@ L’application utilise une API REST locale fournie dans le projet `OCMovies-API
    cd OCMovies-API-EN-FR
    ```
 
-2. **Créer un environnement Python (optionnel mais recommandé)** :
-   ```bash
-   python -m venv env
-   source env/bin/activate  # ou `env\Scripts\activate` sous Windows
-   ```
+2. **Créer un environnement Python** :
+
+   - **Sur Mac/Linux** :
+     ```bash
+     python3 -m venv env
+     source env/bin/activate
+     ```
+
+   - **Sur Windows** :
+     ```bash
+     python -m venv env
+     env\Scripts\activate
+     ```
 
 3. **Installer les dépendances** :
    ```bash
@@ -47,9 +55,16 @@ L’application utilise une API REST locale fournie dans le projet `OCMovies-API
    ```
 
 4. **Lancer le serveur local** :
-   ```bash
-   uvicorn main:app --reload
-   ```
+
+   - **Sur Mac/Linux** :
+     ```bash
+     python3 -m uvicorn main:app --reload
+     ```
+
+   - **Sur Windows** :
+     ```bash
+     python -m uvicorn main:app --reload
+     ```
 
 5. L’API sera disponible à l’adresse :
    ```
@@ -68,7 +83,17 @@ L’application utilise une API REST locale fournie dans le projet `OCMovies-API
    cd JustStreamIt
    ```
 
-2. Ouvrir `index.html` dans un navigateur moderne (Chrome, Firefox, etc.).
+2. Ouvrir `index.html` dans un navigateur moderne :
+
+   - **Sur Mac** : double-clique sur le fichier dans le Finder ou fais :
+     ```bash
+     open index.html
+     ```
+
+   - **Sur Windows** : double-clique sur le fichier dans l'explorateur ou fais :
+     ```bash
+     start index.html
+     ```
 
 ---
 
