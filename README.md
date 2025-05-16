@@ -108,13 +108,6 @@ http://localhost:8000/api/v1/titles/
 
 ---
 
-## 📦 Déploiement GitHub Pages
-
-Le projet peut être visualisé en ligne ici :  
-➡️ [https://sRuiiit.github.io/JustStreamIt/](https://sRuiiit.github.io/JustStreamIt/)
-
----
-
 ## 🧑‍💻 Auteur
 
 Projet réalisé par **Steve Raffner** dans le cadre du parcours **Développeur d'applications Python** chez OpenClassrooms.
