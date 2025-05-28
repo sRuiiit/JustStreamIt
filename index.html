@@ -151,7 +151,6 @@
       return card;
     }
 
-    // Calcul du nombre d'affiches selon la largeur
     function getVisibleCount() {
       if (window.innerWidth < 640) return 2;
       if (window.innerWidth < 1024) return 4;
@@ -188,18 +187,21 @@
 
     function renderOtherMovies() {
       const list = document.getElementById('cat3-list');
+      const btn = document.getElementById('cat3-more');
       list.innerHTML = '';
       const visibleCount = getVisibleCount();
       let n = otherAllVisible ? otherMovies.length : Math.min(visibleCount, otherMovies.length);
       for (let i = 0; i < n; i++) {
         list.appendChild(createMovieCard(otherMovies[i]));
       }
-      const btn = document.getElementById('cat3-more');
-      // Bouton seulement si plus que visibleCount
       if (otherMovies.length > visibleCount) {
         btn.classList.remove('hidden');
         btn.textContent = otherAllVisible ? "Voir moins" : "Voir plus";
       } else {
+        btn.classList.add('hidden');
+      }
+      // Masquer le bouton sur desktop
+      if (window.innerWidth >= 1024) {
         btn.classList.add('hidden');
       }
     }
@@ -240,7 +242,7 @@
       });
 
     window.addEventListener('resize', () => {
-      if (!otherAllVisible) fetchOtherCategoryMovies(currentGenre, renderOtherMovies, false);
+      renderOtherMovies();
     });
 
     // ------------- AUTRES SECTIONS : même logique, 2/4/6, Voir plus/moins ------------
@@ -264,7 +266,6 @@
             .then(res => res.json())
             .then(data => {
               moviesCache = moviesCache.concat(data.results);
-              // Arrête si on a assez pour savoir s'il faut "Voir plus"
               if (!showAll && moviesCache.length < needed && data.next) {
                 page++;
                 fetchPage();
@@ -283,11 +284,14 @@
         for (let i = 0; i < n; i++) {
           list.appendChild(createMovieCard(moviesCache[i]));
         }
-        // Bouton seulement si plus que visibleCount
         if (moviesCache.length > visibleCount) {
           btn.classList.remove('hidden');
           btn.textContent = allVisible ? "Voir moins" : "Voir plus";
         } else {
+          btn.classList.add('hidden');
+        }
+        // Masquer le bouton sur desktop
+        if (window.innerWidth >= 1024) {
           btn.classList.add('hidden');
         }
       }
@@ -303,7 +307,7 @@
       });
 
       window.addEventListener('resize', () => {
-        if (!allVisible) fetchMovies(false);
+        render();
       });
 
       fetchMovies(false);
