@@ -6,25 +6,49 @@
   <title>OCMovies</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .active-category {
-      @apply bg-black text-white;
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
     }
+    .modal-content {
+      background: #fff;
+      border-radius: 0.75rem;
+      padding: 2rem;
+      max-width: 32rem;
+      width: 100%;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-close {
+      position: absolute;
+      top: 0.5rem;
+      right: 1rem;
+      background: transparent;
+      border: none;
+      font-size: 2rem;
+      color: #e11d48;
+      cursor: pointer;
+    }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900">
-  <!-- En-tête -->
   <header class="bg-gray-300 p-4 text-center text-xl font-semibold">
     Vidéos à la demande
   </header>
 
-  <!-- Conteneur principal -->
   <main class="max-w-5xl mx-auto p-4 space-y-10">
-
-    <!-- Meilleur film -->
+    <!-- 1. Meilleur film -->
     <section id="best-movie" class="bg-white rounded-lg shadow p-4">
       <h2 class="text-lg font-bold mb-4">Meilleur film</h2>
       <div class="flex flex-col md:flex-row gap-6 border-2 border-black p-4 transition-all duration-300">
-        <img id="best-movie-img" src="" alt="Meilleur film" class="w-full max-w-xs md:max-w-sm rounded shadow object-cover mx-auto md:mx-0" onerror="this.src='https://placehold.co/300x450?text=Meilleur+film'; this.classList.add('border', 'border-gray-400');">
+        <img id="best-movie-img" src="" alt="Meilleur film" class="w-full max-w-xs md:max-w-sm rounded shadow object-cover mx-auto md:mx-0">
         <div class="flex-1 flex flex-col justify-between">
           <div>
             <h3 id="best-movie-title" class="text-2xl font-bold mb-2">Titre</h3>
@@ -37,54 +61,56 @@
       </div>
     </section>
 
-    <!-- Section de films -->
-    <section id="top-rated" class="space-y-6">
+    <!-- 2. Films les mieux notés -->
+    <section class="space-y-6">
       <h2 class="text-lg font-bold">Films les mieux notés</h2>
-      <div id="top-rated-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"></div>
-      <button id="top-rated-more" class="text-blue-500 hover:underline">Voir plus</button>
+      <div id="top-rated-list" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4"></div>
+      <button id="top-rated-more" class="text-blue-500 hover:underline hidden">Voir plus</button>
     </section>
 
-    <!-- Catégorie 1 -->
+    <!-- 3. Catégorie 1 -->
     <section class="space-y-6">
       <h2 class="text-lg font-bold">Mystery</h2>
-      <div id="cat1-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"></div>
-      <button id="cat1-more" class="text-blue-500 hover:underline">Voir plus</button>
+      <div id="cat1-list" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4"></div>
+      <button id="cat1-more" class="text-blue-500 hover:underline hidden">Voir plus</button>
     </section>
 
-    <!-- Catégorie 2 -->
+    <!-- 4. Catégorie 2 -->
     <section class="space-y-6">
       <h2 class="text-lg font-bold">Comedy</h2>
-      <div id="cat2-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4"></div>
-      <button id="cat2-more" class="text-blue-500 hover:underline">Voir plus</button>
+      <div id="cat2-list" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4"></div>
+      <button id="cat2-more" class="text-blue-500 hover:underline hidden">Voir plus</button>
     </section>
 
-    <!-- Autres catégories -->
+    <!-- 5. Autres catégories -->
     <section class="space-y-4">
       <h2 class="text-lg font-bold">Autres :</h2>
-      <div id="category-buttons" class="flex flex-wrap gap-2"></div>
-      <div id="other-category-title" class="font-semibold mt-2">Catégorie choisie dans la liste</div>
-      <div id="cat3-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4"></div>
-      <button id="cat3-more" class="text-blue-500 hover:underline">Voir plus</button>
+      <div>
+        <label for="other-category-select" class="font-semibold">Choisissez une catégorie :</label>
+        <select id="other-category-select" class="ml-2 p-2 rounded border border-gray-300"></select>
+      </div>
+      <div id="other-category-title" class="font-semibold mt-2">Catégorie choisie : </div>
+      <div id="cat3-list" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-4"></div>
+      <button id="cat3-more" class="text-blue-500 hover:underline hidden">Voir plus</button>
     </section>
   </main>
 
   <!-- Fenêtre modale -->
-  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
-    <div class="bg-white p-6 rounded-lg max-w-lg w-full relative overflow-y-auto max-h-[90vh]">
-      <button onclick="closeModal()" class="absolute top-2 right-2 text-red-500 font-bold text-xl">&times;</button>
-      <h3 id="modal-title" class="text-2xl font-bold mb-2"></h3>
-      <div class="text-sm text-gray-600 mb-2" id="modal-meta"></div>
-      <img id="modal-img" src="" alt="Poster" class="w-40 float-right ml-4 mb-2 rounded border border-gray-400" onerror="this.src='https://placehold.co/150x220?text=Aucun+visuel';">
-      <p id="modal-description" class="text-sm"></p>
-      <div id="modal-details" class="text-sm mt-4 space-y-1"></div>
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close">&times;</button>
+      <h3 id="modal-title"></h3>
+      <div id="modal-meta"></div>
+      <img id="modal-img" src="" alt="Poster">
+      <p id="modal-description"></p>
+      <div id="modal-details"></div>
     </div>
   </div>
 
-  <!-- Script JS : inchangé -->
-<script>
-    const apiBase = 'http://localhost:8000/api/v1/titles';
-    let bestMovieData = null;
+  <script>
+    const apiBase = 'http://127.0.0.1:8000/api/v1/titles';
 
+    // MODALE Détails
     function openModal(data) {
       document.getElementById('modal-title').textContent = data.title;
       document.getElementById('modal-meta').textContent = `${data.year} - ${data.countries.join(', ')} - ${data.duration}min`;
@@ -105,13 +131,11 @@
       `;
       document.getElementById('modal').classList.remove('hidden');
     }
-
-    function closeModal() {
+    document.getElementById('modal-close').onclick = function() {
       document.getElementById('modal').classList.add('hidden');
-    }
+    };
 
-    function createMovieCard(movie, targetId) {
-      const container = document.getElementById(targetId);
+    function createMovieCard(movie) {
       const card = document.createElement('div');
       card.className = 'cursor-pointer transition duration-200 hover:scale-105';
       const img = document.createElement('img');
@@ -124,85 +148,183 @@
       };
       img.onclick = () => fetch(movie.url).then(r => r.json()).then(openModal);
       card.appendChild(img);
-      container.appendChild(card);
+      return card;
     }
 
-    function loadMovies(endpoint, targetId, page = 1) {
-      fetch(`${endpoint}&page_size=6&page=${page}`)
-        .then(res => res.json())
-        .then(data => {
-          data.results.forEach(movie => createMovieCard(movie, targetId));
-        });
+    // Calcul du nombre d'affiches selon la largeur
+    function getVisibleCount() {
+      if (window.innerWidth < 640) return 2;
+      if (window.innerWidth < 1024) return 4;
+      return 6;
     }
 
-    function setupSection(endpoint, buttonId, targetId) {
+    // SECTION "AUTRES"
+    let otherMovies = [];
+    let otherAllVisible = false;
+    let currentGenre = "";
+
+    function fetchOtherCategoryMovies(genre, callback, showAll = false) {
+      otherMovies = [];
+      let visibleCount = getVisibleCount();
       let page = 1;
-      loadMovies(endpoint, targetId, page);
-      loadMovies(endpoint, targetId, ++page);
-      document.getElementById(buttonId).addEventListener('click', () => {
-        page++;
-        loadMovies(endpoint, targetId, page);
-      });
+      let needed = showAll ? 100 : visibleCount + 1;
+
+      function fetchPage() {
+        fetch(`http://127.0.0.1:8000/api/v1/titles/?genre=${encodeURIComponent(genre)}&sort_by=-imdb_score&page_size=6&page=${page}`)
+          .then(res => res.json())
+          .then(data => {
+            otherMovies = otherMovies.concat(data.results);
+            // Arrêter dès qu'on a le nombre nécessaire ou qu'il n'y a plus de page
+            if (!showAll && otherMovies.length < needed && data.next) {
+              page++;
+              fetchPage();
+            } else {
+              callback();
+            }
+          });
+      }
+      fetchPage();
     }
 
-    // Meilleur film
+    function renderOtherMovies() {
+      const list = document.getElementById('cat3-list');
+      list.innerHTML = '';
+      const visibleCount = getVisibleCount();
+      let n = otherAllVisible ? otherMovies.length : Math.min(visibleCount, otherMovies.length);
+      for (let i = 0; i < n; i++) {
+        list.appendChild(createMovieCard(otherMovies[i]));
+      }
+      const btn = document.getElementById('cat3-more');
+      // Bouton seulement si plus que visibleCount
+      if (otherMovies.length > visibleCount) {
+        btn.classList.remove('hidden');
+        btn.textContent = otherAllVisible ? "Voir moins" : "Voir plus";
+      } else {
+        btn.classList.add('hidden');
+      }
+    }
+
+    document.getElementById('cat3-more').addEventListener('click', () => {
+      if (!otherAllVisible) {
+        otherAllVisible = true;
+        fetchOtherCategoryMovies(currentGenre, renderOtherMovies, true);
+      } else {
+        otherAllVisible = false;
+        fetchOtherCategoryMovies(currentGenre, renderOtherMovies, false);
+      }
+    });
+
+    fetch('http://127.0.0.1:8000/api/v1/genres/?page_size=100')
+      .then(res => res.json())
+      .then(data => {
+        let genres = data.results ? data.results.map(g => g.name) : [];
+        const select = document.getElementById('other-category-select');
+        select.innerHTML = '';
+        genres.forEach(genre => {
+          const opt = document.createElement('option');
+          opt.value = genre;
+          opt.textContent = genre;
+          select.appendChild(opt);
+        });
+        currentGenre = genres[0] || "";
+        select.value = currentGenre;
+        document.getElementById('other-category-title').textContent = "Catégorie choisie : " + currentGenre;
+        fetchOtherCategoryMovies(currentGenre, renderOtherMovies);
+
+        select.addEventListener('change', function() {
+          currentGenre = this.value;
+          otherAllVisible = false;
+          document.getElementById('other-category-title').textContent = "Catégorie choisie : " + currentGenre;
+          fetchOtherCategoryMovies(currentGenre, renderOtherMovies);
+        });
+      });
+
+    window.addEventListener('resize', () => {
+      if (!otherAllVisible) fetchOtherCategoryMovies(currentGenre, renderOtherMovies, false);
+    });
+
+    // ------------- AUTRES SECTIONS : même logique, 2/4/6, Voir plus/moins ------------
+
+    function setupSection(sectionId, endpoint) {
+      let allVisible = false;
+      let moviesCache = [];
+
+      const list = document.getElementById(sectionId + '-list');
+      const btn = document.getElementById(sectionId + '-more');
+      btn.classList.add('hidden');
+
+      function fetchMovies(showAll = false) {
+        moviesCache = [];
+        let visibleCount = getVisibleCount();
+        let page = 1;
+        let needed = showAll ? 100 : visibleCount + 1;
+
+        function fetchPage() {
+          fetch(endpoint + `&page_size=6&page=${page}`)
+            .then(res => res.json())
+            .then(data => {
+              moviesCache = moviesCache.concat(data.results);
+              // Arrête si on a assez pour savoir s'il faut "Voir plus"
+              if (!showAll && moviesCache.length < needed && data.next) {
+                page++;
+                fetchPage();
+              } else {
+                render();
+              }
+            });
+        }
+        fetchPage();
+      }
+
+      function render() {
+        list.innerHTML = '';
+        const visibleCount = getVisibleCount();
+        let n = allVisible ? moviesCache.length : Math.min(visibleCount, moviesCache.length);
+        for (let i = 0; i < n; i++) {
+          list.appendChild(createMovieCard(moviesCache[i]));
+        }
+        // Bouton seulement si plus que visibleCount
+        if (moviesCache.length > visibleCount) {
+          btn.classList.remove('hidden');
+          btn.textContent = allVisible ? "Voir moins" : "Voir plus";
+        } else {
+          btn.classList.add('hidden');
+        }
+      }
+
+      btn.addEventListener('click', () => {
+        if (!allVisible) {
+          allVisible = true;
+          fetchMovies(true);
+        } else {
+          allVisible = false;
+          fetchMovies(false);
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        if (!allVisible) fetchMovies(false);
+      });
+
+      fetchMovies(false);
+    }
+
+    // Meilleur film (zone unique)
     fetch(`${apiBase}/?sort_by=-imdb_score`)
       .then(res => res.json())
       .then(data => fetch(data.results[0].url))
       .then(res => res.json())
       .then(best => {
-        bestMovieData = best;
         document.getElementById('best-movie-img').src = best.image_url;
         document.getElementById('best-movie-title').textContent = best.title;
         document.getElementById('best-movie-desc').textContent = best.description;
         document.getElementById('best-movie-details').addEventListener('click', () => openModal(best));
       });
 
-    setupSection(`${apiBase}/?sort_by=-imdb_score`, 'top-rated-more', 'top-rated-list');
-    setupSection(`${apiBase}/?genre=Mystery&sort_by=-imdb_score`, 'cat1-more', 'cat1-list');
-    setupSection(`${apiBase}/?genre=Comedy&sort_by=-imdb_score`, 'cat2-more', 'cat2-list');
-
-    // Catégories dynamiques avec boutons
-    fetch('http://localhost:8000/api/v1/genres/')
-      .then(res => res.json())
-      .then(data => {
-        const genres = data.results;
-        const buttonContainer = document.getElementById('category-buttons');
-        let currentGenre = genres[0].name;
-        let page = 1;
-        let activeBtn = null;
-
-        function loadSelectedCategory(reset = false) {
-          if (reset) document.getElementById('cat3-list').innerHTML = '';
-          document.getElementById('other-category-title').textContent = `Voir au-dessus (catégorie choisie = ${currentGenre})`;
-          loadMovies(`${apiBase}/?genre=${currentGenre}&sort_by=-imdb_score`, 'cat3-list', page);
-          loadMovies(`${apiBase}/?genre=${currentGenre}&sort_by=-imdb_score`, 'cat3-list', ++page);
-        }
-
-        genres.forEach(genre => {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.textContent = genre.name;
-          btn.className = 'border p-2 rounded transition hover:bg-gray-200';
-          btn.addEventListener('click', e => {
-            e.preventDefault();
-            currentGenre = genre.name;
-            page = 1;
-            if (activeBtn) activeBtn.classList.remove('bg-black', 'text-white');
-            btn.classList.add('bg-black', 'text-white');
-            activeBtn = btn;
-            loadSelectedCategory(true);
-          });
-          buttonContainer.appendChild(btn);
-        });
-
-        loadSelectedCategory(true);
-
-        document.getElementById('cat3-more').addEventListener('click', () => {
-          page++;
-          loadSelectedCategory();
-        });
-      });
+    // Autres sections à 2/4/6 + Voir plus/moins
+    setupSection('top-rated', `${apiBase}/?sort_by=-imdb_score`);
+    setupSection('cat1', `${apiBase}/?genre=Mystery&sort_by=-imdb_score`);
+    setupSection('cat2', `${apiBase}/?genre=Comedy&sort_by=-imdb_score`);
   </script>
 </body>
 </html>
