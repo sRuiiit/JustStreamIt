@@ -90,7 +90,7 @@ http://localhost:8000/api/v1/titles/
 
 1. Cloner ce dépôt :
    ```bash
-   git clone [https://github.com/sRuiiit/JustStreamIt.git](https://github.com/steveraffner/JustStreamIt.git)
+   git clone https://github.com/steveraffner/JustStreamIt.git
    cd JustStreamIt
    ```
 
